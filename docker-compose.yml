@@ -1,0 +1,33 @@
+version: '3.8'
+
+networks:
+  fastapi-tt1-network:
+    name: fastapi-tt1-network
+    driver: bridge
+
+volumes:
+  fastapi-tt1-volume:
+    name: fastapi-tt1-volume
+
+services:
+  fastapi-tt1-db:
+    image: postgres:14-bullseye
+
+    container_name: fastapi-tt1-db    
+
+    volumes:
+      - fastapi-tt1-volume:/var/lib/postgresql/data
+      - ./scripts:/docker-entrypoint-initdb.d/
+
+    networks:
+      - fastapi-tt1-network
+
+    # environment:
+    #   - POSTGRES_USER=postgres
+    #   - POSTGRES_PASSWORD=password
+    
+    env_file:
+      - ./.env
+    
+    ports:
+      - 5434:5432
